@@ -1,44 +1,38 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { AlertCircle } from "lucide-react"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export function LoginForm() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
-    // In a real application, this would validate against a backend
-    // For demo purposes, we'll use a simple check
     if (email === "admin@freelaxpress.com" && password === "admin123") {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Store authentication state (in a real app, use a proper auth solution)
-      localStorage.setItem("isAuthenticated", "true")
+      localStorage.setItem("isAuthenticated", "true");
 
-      // Redirect to admin dashboard
-      router.push("/admin")
+      router.push("/admin");
     } else {
-      setError("Credenciales incorrectas. Inténtalo de nuevo.")
+      setError("Credenciales incorrectas. Inténtalo de nuevo.");
     }
-
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="mt-8 space-y-6">
@@ -83,14 +77,25 @@ export function LoginForm() {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <Input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4" />
-          <Label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+          <Input
+            id="remember-me"
+            name="remember-me"
+            type="checkbox"
+            className="h-4 w-4"
+          />
+          <Label
+            htmlFor="remember-me"
+            className="ml-2 block text-sm text-gray-900"
+          >
             Recordarme
           </Label>
         </div>
 
         <div className="text-sm">
-          <a href="#" className="font-medium text-primary hover:text-primary/80">
+          <a
+            href="#"
+            className="font-medium text-primary hover:text-primary/80"
+          >
             ¿Olvidaste tu contraseña?
           </a>
         </div>
@@ -102,5 +107,5 @@ export function LoginForm() {
         </Button>
       </div>
     </form>
-  )
+  );
 }

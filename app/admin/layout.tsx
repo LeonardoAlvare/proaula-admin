@@ -1,29 +1,19 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { AdminSidebar } from "@/components/admin-sidebar"
-import { ThemeProvider } from "@/components/theme-provider"
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AdminSidebar } from "@/components/admin-sidebar";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export default function AdminLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const router = useRouter()
-
-  useEffect(() => {
-    // Check if user is authenticated
-    const isAuthenticated = localStorage.getItem("isAuthenticated")
-
-    if (!isAuthenticated) {
-      router.push("/")
-    }
-  }, [router])
-
+  const router = useRouter();
   return (
     <ThemeProvider attribute="class" defaultTheme="light">
       <SidebarProvider>
@@ -33,5 +23,5 @@ export default function AdminLayout({
         </div>
       </SidebarProvider>
     </ThemeProvider>
-  )
+  );
 }

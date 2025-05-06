@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,17 +9,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Eye, ExternalLink } from "lucide-react"
-import { useState } from "react"
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Eye, ExternalLink } from "lucide-react";
+import { useState } from "react";
 
 interface UsersManagementProps {
-  filter: "all" | "freelancers" | "clients"
+  filter: "all" | "freelancers" | "clients";
 }
 
 export function UsersManagement({ filter }: UsersManagementProps) {
-  const [selectedUser, setSelectedUser] = useState<any>(null)
+  const [selectedUser, setSelectedUser] = useState<any>(null);
 
   // Mock data - would be fetched from API in a real application
   const users = [
@@ -32,7 +39,10 @@ export function UsersManagement({ filter }: UsersManagementProps) {
       languages: ["Español", "Inglés"],
       yearsExperience: 5,
       educationLevel: "Licenciatura en Informática",
-      certifications: ["AWS Certified Developer", "React Developer Certification"],
+      certifications: [
+        "AWS Certified Developer",
+        "React Developer Certification",
+      ],
       workAvailability: "Full-time",
       category: "Web Development",
       socialMedia: {
@@ -104,14 +114,14 @@ export function UsersManagement({ filter }: UsersManagementProps) {
       },
       projectsPublished: 2,
     },
-  ]
+  ];
 
   const filteredUsers =
     filter === "all"
       ? users
       : filter === "freelancers"
-        ? users.filter((user) => user.isFreelancer)
-        : users.filter((user) => !user.isFreelancer)
+      ? users.filter((user) => user.isFreelancer)
+      : users.filter((user) => !user.isFreelancer);
 
   return (
     <>
@@ -123,7 +133,6 @@ export function UsersManagement({ filter }: UsersManagementProps) {
             <TableHead>Email</TableHead>
             <TableHead>Tipo</TableHead>
             <TableHead>Especialidad</TableHead>
-            <TableHead className="text-right">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -145,117 +154,15 @@ export function UsersManagement({ filter }: UsersManagementProps) {
                 {user.isFreelancer ? (
                   user.category
                 ) : (
-                  <span className="text-muted-foreground">{user.projectsPublished} proyectos publicados</span>
+                  <span className="text-muted-foreground">
+                    {user.projectsPublished} proyectos publicados
+                  </span>
                 )}
-              </TableCell>
-              <TableCell className="text-right">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="ghost" size="icon" onClick={() => setSelectedUser(user)}>
-                      <Eye className="h-4 w-4" />
-                      <span className="sr-only">Ver detalles</span>
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[600px]">
-                    <DialogHeader>
-                      <DialogTitle>Detalles del Usuario</DialogTitle>
-                      <DialogDescription>
-                        {user.id} - {user.name} {user.lastName}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <h3 className="font-medium">Email</h3>
-                          <p>{user.email}</p>
-                        </div>
-                        <div>
-                          <h3 className="font-medium">Tipo</h3>
-                          <p>{user.isFreelancer ? "Freelancer" : "Cliente"}</p>
-                        </div>
-                      </div>
-
-                      {user.isFreelancer && (
-                        <>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <h3 className="font-medium">Años de Experiencia</h3>
-                              <p>{user.yearsExperience} años</p>
-                            </div>
-                            <div>
-                              <h3 className="font-medium">Nivel Educativo</h3>
-                              <p>{user.educationLevel}</p>
-                            </div>
-                          </div>
-
-                          <div>
-                            <h3 className="font-medium">Idiomas</h3>
-                            <div className="flex gap-2 mt-1">
-                              {user.languages.map((language) => (
-                                <Badge key={language} variant="outline">
-                                  {language}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div>
-                            <h3 className="font-medium">Certificaciones</h3>
-                            <div className="flex flex-wrap gap-2 mt-1">
-                              {user.certifications.map((cert) => (
-                                <Badge key={cert} variant="outline">
-                                  {cert}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <h3 className="font-medium">Disponibilidad</h3>
-                              <p>{user.workAvailability}</p>
-                            </div>
-                            <div>
-                              <h3 className="font-medium">Categoría</h3>
-                              <p>{user.category}</p>
-                            </div>
-                          </div>
-
-                          <div>
-                            <h3 className="font-medium">Proyectos Completados</h3>
-                            <p>{user.projectsCompleted}</p>
-                          </div>
-                        </>
-                      )}
-
-                      {!user.isFreelancer && (
-                        <div>
-                          <h3 className="font-medium">Proyectos Publicados</h3>
-                          <p>{user.projectsPublished}</p>
-                        </div>
-                      )}
-
-                      <div>
-                        <h3 className="font-medium">Enlaces</h3>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {Object.entries(user.socialMedia).map(([key, value]) => (
-                            <Button key={key} variant="outline" size="sm" asChild>
-                              <a href={value as string} target="_blank" rel="noopener noreferrer">
-                                {key.charAt(0).toUpperCase() + key.slice(1)}
-                                <ExternalLink className="ml-1 h-3 w-3" />
-                              </a>
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </>
-  )
+  );
 }

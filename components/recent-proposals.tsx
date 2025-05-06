@@ -1,12 +1,19 @@
-"use client"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Check, Eye, X } from "lucide-react"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Check, Eye, X } from "lucide-react";
 
 interface RecentProposalsProps {
-  showAll?: boolean
+  showAll?: boolean;
 }
 
 export function RecentProposals({ showAll = false }: RecentProposalsProps) {
@@ -52,22 +59,22 @@ export function RecentProposals({ showAll = false }: RecentProposalsProps) {
       paymentProposal: "$1,700",
       estimatedTime: "20 días",
     },
-  ]
+  ];
 
-  const displayProposals = showAll ? proposals : proposals.slice(0, 4)
+  const displayProposals = showAll ? proposals : proposals.slice(0, 4);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending":
-        return <Badge className="bg-amber-500">Pendiente</Badge>
+        return <Badge className="bg-amber-500">Pendiente</Badge>;
       case "accepted":
-        return <Badge className="bg-green-500">Aceptada</Badge>
+        return <Badge className="bg-green-500">Aceptada</Badge>;
       case "rejected":
-        return <Badge className="bg-red-500">Rechazada</Badge>
+        return <Badge className="bg-red-500">Rechazada</Badge>;
       default:
-        return <Badge>{status}</Badge>
+        return <Badge>{status}</Badge>;
     }
-  }
+  };
 
   return (
     <Table>
@@ -77,7 +84,6 @@ export function RecentProposals({ showAll = false }: RecentProposalsProps) {
           <TableHead>Proyecto</TableHead>
           <TableHead>Freelancer</TableHead>
           <TableHead>Estado</TableHead>
-          <TableHead className="text-right">Acciones</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -92,29 +98,9 @@ export function RecentProposals({ showAll = false }: RecentProposalsProps) {
             </TableCell>
             <TableCell>{proposal.freelancerName}</TableCell>
             <TableCell>{getStatusBadge(proposal.status)}</TableCell>
-            <TableCell className="text-right">
-              <div className="flex justify-end gap-2">
-                <Button variant="ghost" size="icon">
-                  <Eye className="h-4 w-4" />
-                  <span className="sr-only">Ver detalles</span>
-                </Button>
-                {proposal.status === "pending" && (
-                  <>
-                    <Button variant="ghost" size="icon" className="text-green-500">
-                      <Check className="h-4 w-4" />
-                      <span className="sr-only">Aceptar</span>
-                    </Button>
-                    <Button variant="ghost" size="icon" className="text-red-500">
-                      <X className="h-4 w-4" />
-                      <span className="sr-only">Rechazar</span>
-                    </Button>
-                  </>
-                )}
-              </div>
-            </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
-  )
+  );
 }

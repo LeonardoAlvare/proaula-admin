@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-import { BarChart3, FileText, Home, LogOut, Users } from "lucide-react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { BarChart3, FileText, Home, LogOut, Users } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -14,11 +14,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 export function AdminSidebar() {
-  const pathname = usePathname()
-  const router = useRouter()
+  const pathname = usePathname();
+  const router = useRouter();
 
   const routes = [
     {
@@ -41,20 +41,22 @@ export function AdminSidebar() {
       href: "/admin/users",
       icon: Users,
     },
-  ]
+  ];
 
   const handleLogout = () => {
-    // Remove authentication state
-    localStorage.removeItem("isAuthenticated")
-    // Redirect to login page
-    router.push("/")
-  }
+    localStorage.removeItem("isAuthenticated");
+
+    window.location.href = "http://localhost:5173/auth/login";
+  };
 
   return (
     <>
       <Sidebar>
         <SidebarHeader className="flex items-center justify-between p-4">
-          <Link href="/admin" className="flex items-center gap-2 font-bold text-xl">
+          <Link
+            href="/admin"
+            className="flex items-center gap-2 font-bold text-xl"
+          >
             <span>FreelaXpress</span>
           </Link>
           <SidebarTrigger className="md:hidden" />
@@ -63,7 +65,11 @@ export function AdminSidebar() {
           <SidebarMenu>
             {routes.map((route) => (
               <SidebarMenuItem key={route.href}>
-                <SidebarMenuButton asChild isActive={pathname === route.href} tooltip={route.title}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === route.href}
+                  tooltip={route.title}
+                >
                   <Link href={route.href}>
                     <route.icon className="h-5 w-5" />
                     <span>{route.title}</span>
@@ -81,10 +87,17 @@ export function AdminSidebar() {
               </div>
               <div>
                 <p className="text-sm font-medium">Admin</p>
-                <p className="text-xs text-muted-foreground">admin@freelaxpress.com</p>
+                <p className="text-xs text-muted-foreground">
+                  admin@freelaxpress.com
+                </p>
               </div>
             </div>
-            <Button variant="outline" size="sm" onClick={handleLogout} className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
               <LogOut className="h-4 w-4" />
               <span>Cerrar sesión</span>
             </Button>
@@ -98,5 +111,5 @@ export function AdminSidebar() {
         </Link>
       </div>
     </>
-  )
+  );
 }

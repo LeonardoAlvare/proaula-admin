@@ -1,16 +1,22 @@
-"use client"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Eye } from "lucide-react"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Eye } from "lucide-react";
 
 interface RecentProjectsProps {
-  showAll?: boolean
+  showAll?: boolean;
 }
 
 export function RecentProjects({ showAll = false }: RecentProjectsProps) {
-  // Mock data - would be fetched from API in a real application
   const projects = [
     {
       id: "PRJ001",
@@ -57,24 +63,24 @@ export function RecentProjects({ showAll = false }: RecentProjectsProps) {
       status: "in_progress",
       salary: "$1,800",
     },
-  ]
+  ];
 
-  const displayProjects = showAll ? projects : projects.slice(0, 4)
+  const displayProjects = showAll ? projects : projects.slice(0, 4);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
-        return <Badge className="bg-blue-500">Activo</Badge>
+        return <Badge className="bg-blue-500">Activo</Badge>;
       case "in_progress":
-        return <Badge className="bg-amber-500">En Realización</Badge>
+        return <Badge className="bg-amber-500">En Realización</Badge>;
       case "completed":
-        return <Badge className="bg-green-500">Completado</Badge>
+        return <Badge className="bg-green-500">Completado</Badge>;
       case "paid":
-        return <Badge className="bg-emerald-600">Pagado</Badge>
+        return <Badge className="bg-emerald-600">Pagado</Badge>;
       default:
-        return <Badge>{status}</Badge>
+        return <Badge>{status}</Badge>;
     }
-  }
+  };
 
   return (
     <Table>
@@ -85,7 +91,6 @@ export function RecentProjects({ showAll = false }: RecentProjectsProps) {
           <TableHead>Cliente</TableHead>
           <TableHead>Estado</TableHead>
           <TableHead>Presupuesto</TableHead>
-          <TableHead className="text-right">Acciones</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -95,21 +100,17 @@ export function RecentProjects({ showAll = false }: RecentProjectsProps) {
             <TableCell>
               <div>
                 <div className="font-medium">{project.name}</div>
-                <div className="text-sm text-muted-foreground">{project.category}</div>
+                <div className="text-sm text-muted-foreground">
+                  {project.category}
+                </div>
               </div>
             </TableCell>
             <TableCell>{project.client}</TableCell>
             <TableCell>{getStatusBadge(project.status)}</TableCell>
             <TableCell>{project.salary}</TableCell>
-            <TableCell className="text-right">
-              <Button variant="ghost" size="icon">
-                <Eye className="h-4 w-4" />
-                <span className="sr-only">Ver detalles</span>
-              </Button>
-            </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
-  )
+  );
 }
