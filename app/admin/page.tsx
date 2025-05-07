@@ -6,9 +6,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DashboardCharts } from "@/components/dashboard-charts";
-import { RecentProjects } from "@/components/recent-projects";
-import { RecentProposals } from "@/components/recent-proposals";
+
+import { ProjectsManagement } from "@/components/projects-management";
+import { ProposalsManagement } from "@/components/proposals-management";
 
 export default function DashboardPage() {
   return (
@@ -24,15 +24,15 @@ export default function DashboardPage() {
             <TabsTrigger value="projects">Proyectos</TabsTrigger>
             <TabsTrigger value="proposals">Propuestas</TabsTrigger>
           </TabsList>
+
           <TabsContent value="overview" className="space-y-4">
-            {/* <DashboardCharts /> */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
                 <CardHeader>
                   <CardTitle>Proyectos Recientes</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <RecentProjects />
+                  <ProjectsManagement filter="all" />
                 </CardContent>
               </Card>
               <Card className="col-span-3">
@@ -40,11 +40,12 @@ export default function DashboardPage() {
                   <CardTitle>Propuestas Recientes</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <RecentProposals />
+                  <ProposalsManagement filter="all" />
                 </CardContent>
               </Card>
             </div>
           </TabsContent>
+
           <TabsContent value="projects" className="space-y-4">
             <Card>
               <CardHeader>
@@ -54,7 +55,7 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <RecentProjects showAll />
+                <ProjectsManagement filter="all" />
               </CardContent>
             </Card>
           </TabsContent>
@@ -67,7 +68,7 @@ export default function DashboardPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <RecentProposals showAll />
+                <ProposalsManagement filter="all" />
               </CardContent>
             </Card>
           </TabsContent>
