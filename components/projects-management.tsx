@@ -1,8 +1,5 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -10,109 +7,90 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Eye } from "lucide-react"
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useEffect, useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 
 interface ProjectsManagementProps {
-  filter: "all" | "active" | "in_progress" | "completed" | "paid"
+  filter: "all" | "active" | "in_progress" | "completed" | "paid" | "inactive";
 }
 
+type Project = {
+  _id: string;
+  userId: string;
+  name: string;
+  techs: string[];
+  description: string;
+  dateInit: Date;
+  dateEnd: Date;
+  salary: number;
+  status: string;
+};
+
 export function ProjectsManagement({ filter }: ProjectsManagementProps) {
-  const [selectedProject, setSelectedProject] = useState<any>(null)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
 
-  // Mock data - would be fetched from API in a real application
-  const projects = [
-    {
-      id: "PRJ001",
-      name: "Desarrollo de E-commerce",
-      userId: "USR123",
-      clientName: "Tienda Online S.A.",
-      description:
-        "Desarrollo de una tienda en línea completa con carrito de compras, pasarela de pagos y panel de administración.",
-      category: "Web Development",
-      deliveryDate: "2023-12-15",
-      duration: "45 días",
-      salary: "$3,500",
-      status: "active",
-      proposals: 8,
-    },
-    {
-      id: "PRJ002",
-      name: "App Móvil de Delivery",
-      userId: "USR456",
-      clientName: "Delivery Express",
-      description:
-        "Aplicación móvil para servicio de entrega a domicilio con seguimiento en tiempo real y sistema de calificaciones.",
-      category: "Mobile Development",
-      deliveryDate: "2023-11-30",
-      duration: "60 días",
-      salary: "$5,000",
-      status: "in_progress",
-      proposals: 12,
-      assignedTo: "Ana Martínez",
-    },
-    {
-      id: "PRJ003",
-      name: "Rediseño de Sitio Web",
-      userId: "USR789",
-      clientName: "Corporación XYZ",
-      description:
-        "Rediseño completo de sitio web corporativo con enfoque en experiencia de usuario y optimización para móviles.",
-      category: "UI/UX Design",
-      deliveryDate: "2023-12-05",
-      duration: "30 días",
-      salary: "$2,200",
-      status: "completed",
-      proposals: 6,
-      assignedTo: "Miguel Sánchez",
-    },
-    {
-      id: "PRJ004",
-      name: "Sistema de Gestión Interna",
-      userId: "USR321",
-      clientName: "Industrias ABC",
-      description: "Sistema para gestión de recursos humanos, inventario y finanzas con reportes personalizados.",
-      category: "Software Development",
-      deliveryDate: "2024-01-20",
-      duration: "90 días",
-      salary: "$7,800",
-      status: "active",
-      proposals: 4,
-    },
-    {
-      id: "PRJ005",
-      name: "Integración de API de Pagos",
-      userId: "USR654",
-      clientName: "Fintech Solutions",
-      description:
-        "Integración de múltiples pasarelas de pago en plataforma existente con sistema de conciliación automática.",
-      category: "Web Development",
-      deliveryDate: "2023-12-10",
-      duration: "20 días",
-      salary: "$1,800",
-      status: "paid",
-      proposals: 9,
-      assignedTo: "Javier López",
-    },
-  ]
+  useEffect(() => {
+    fetchProjects();
 
-  const filteredProjects = filter === "all" ? projects : projects.filter((project) => project.status === filter)
+    return () => {
+      setProjects([]);
+    };
+  }, []);
+
+  const fetchProjects = async () => {
+    const response = await fetch("http://localhost:3001/api/project", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setProjects(data);
+  };
+
+  const filteredProjects =
+    filter === "all"
+      ? projects
+      : projects.filter((project) => project.status === filter);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
-        return <Badge className="bg-blue-500">Activo</Badge>
+        return <Badge className="bg-blue-500">Activo</Badge>;
       case "in_progress":
-        return <Badge className="bg-amber-500">En Realización</Badge>
+        return <Badge className="bg-amber-500">En Realización</Badge>;
       case "completed":
-        return <Badge className="bg-green-500">Completado</Badge>
+        return <Badge className="bg-green-500">Completado</Badge>;
       case "paid":
-        return <Badge className="bg-emerald-600">Pagado</Badge>
+        return <Badge className="bg-emerald-600">Pagado</Badge>;
+      case "inactive":
+        return <Badge className="bg-red-500">Inactivo</Badge>;
       default:
-        return <Badge>{status}</Badge>
+        return <Badge>{status}</Badge>;
     }
-  }
+  };
+
+  const getDuration = (dateInit: Date, dateEnd: Date) => {
+    const start = new Date(dateInit);
+    const end = new Date(dateEnd);
+
+    const duration = Math.abs(end.getTime() - start.getTime());
+    const days = Math.ceil(duration / (1000 * 3600 * 24));
+    return `${days} días`;
+  };
 
   return (
     <>
@@ -131,21 +109,38 @@ export function ProjectsManagement({ filter }: ProjectsManagementProps) {
         </TableHeader>
         <TableBody>
           {filteredProjects.map((project) => (
-            <TableRow key={project.id}>
-              <TableCell className="font-medium">{project.id}</TableCell>
+            <TableRow key={project._id}>
+              <TableCell className="font-medium">{project._id}</TableCell>
               <TableCell>
                 <div className="font-medium">{project.name}</div>
-                <div className="text-sm text-muted-foreground">Entrega: {project.deliveryDate}</div>
+                <div className="text-sm text-muted-foreground">
+                  Entrega: {new Date(project.dateEnd).toLocaleDateString()}
+                </div>
               </TableCell>
-              <TableCell>{project.clientName}</TableCell>
-              <TableCell>{project.category}</TableCell>
+              <TableCell>{project.name}</TableCell>
+              <TableCell>{project.description}</TableCell>
               <TableCell>{project.salary}</TableCell>
               <TableCell>{getStatusBadge(project.status)}</TableCell>
-              <TableCell>{project.proposals}</TableCell>
+              <TableCell>
+                {project.techs.map((tech, index) => (
+                  <span key={index} className="mr-1">
+                    <Badge variant="outline">{tech}</Badge>
+                  </span>
+                ))}
+              </TableCell>
               <TableCell className="text-right">
-                <Dialog>
+                <Dialog
+                  open={selectedProject?._id === project._id}
+                  onOpenChange={(open) => {
+                    if (!open) setSelectedProject(null);
+                  }}
+                >
                   <DialogTrigger asChild>
-                    <Button variant="ghost" size="icon" onClick={() => setSelectedProject(project)}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setSelectedProject(project)}
+                    >
                       <Eye className="h-4 w-4" />
                       <span className="sr-only">Ver detalles</span>
                     </Button>
@@ -154,54 +149,46 @@ export function ProjectsManagement({ filter }: ProjectsManagementProps) {
                     <DialogHeader>
                       <DialogTitle>Detalles del Proyecto</DialogTitle>
                       <DialogDescription>
-                        {project.id} - {project.name}
+                        {project._id} - {project.name}
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <h3 className="font-medium">Cliente</h3>
-                          <p>{project.clientName}</p>
-                        </div>
-                        <div>
-                          <h3 className="font-medium">Categoría</h3>
-                          <p>{project.category}</p>
-                        </div>
+
+                    <div className="flex flex-col space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold">ID:</span>
+                        <span>{project._id}</span>
                       </div>
-                      <div>
-                        <h3 className="font-medium">Descripción</h3>
-                        <p className="text-sm">{project.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold">Nombre:</span>
+                        <span>{project.name}</span>
                       </div>
-                      <div className="grid grid-cols-3 gap-4">
-                        <div>
-                          <h3 className="font-medium">Presupuesto</h3>
-                          <p>{project.salary}</p>
-                        </div>
-                        <div>
-                          <h3 className="font-medium">Duración</h3>
-                          <p>{project.duration}</p>
-                        </div>
-                        <div>
-                          <h3 className="font-medium">Fecha de Entrega</h3>
-                          <p>{project.deliveryDate}</p>
-                        </div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold">Descripción:</span>
+                        <span>{project.description}</span>
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <h3 className="font-medium">Estado</h3>
-                          <p>{getStatusBadge(project.status)}</p>
-                        </div>
-                        <div>
-                          <h3 className="font-medium">Propuestas</h3>
-                          <p>{project.proposals}</p>
-                        </div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold">Tecnologías:</span>
+                        {project.techs.map((tech, index) => (
+                          <Badge key={index} variant="outline" className="mr-1">
+                            {tech}
+                          </Badge>
+                        ))}
                       </div>
-                      {project.assignedTo && (
-                        <div>
-                          <h3 className="font-medium">Asignado a</h3>
-                          <p>{project.assignedTo}</p>
-                        </div>
-                      )}
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold">Duración:</span>
+                        <span>
+                          {getDuration(project.dateInit, project.dateEnd)}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold">Presupuesto:</span>
+                        <span>${project.salary}</span>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold">Estado:</span>
+                        {getStatusBadge(project.status)}
+                      </div>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -211,5 +198,5 @@ export function ProjectsManagement({ filter }: ProjectsManagementProps) {
         </TableBody>
       </Table>
     </>
-  )
+  );
 }
