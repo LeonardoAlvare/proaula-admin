@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ProposalsManagement } from "@/components/proposals-management"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
+import { ProposalsManagement } from "@/components/proposals-management"
 
 export default function ProposalsPage() {
   return (
@@ -35,7 +36,7 @@ export default function ProposalsPage() {
                 <CardDescription>Propuestas que aún no han sido revisadas</CardDescription>
               </CardHeader>
               <CardContent>
-                <ProposalsManagement filter="pending" />
+                <ProposalsManagement filter="pendiente" />
               </CardContent>
             </Card>
           </TabsContent>
@@ -46,7 +47,7 @@ export default function ProposalsPage() {
                 <CardDescription>Propuestas que han sido aprobadas</CardDescription>
               </CardHeader>
               <CardContent>
-                <ProposalsManagement filter="accepted" />
+                <ProposalsManagement filter="aceptado" />
               </CardContent>
             </Card>
           </TabsContent>
@@ -57,7 +58,7 @@ export default function ProposalsPage() {
                 <CardDescription>Propuestas que han sido rechazadas</CardDescription>
               </CardHeader>
               <CardContent>
-                <ProposalsManagement filter="rejected" />
+                <ProposalsManagement filter="rechazado" />
               </CardContent>
             </Card>
           </TabsContent>
