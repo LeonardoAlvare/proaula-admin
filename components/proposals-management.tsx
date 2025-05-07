@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Check, Eye, User, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -20,117 +18,49 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Check, Eye, User, X } from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface ProposalsManagementProps {
-  filter: "all" | "pending" | "accepted" | "rejected";
+  filter: "all" | "pendiente" | "aceptado" | "rechazado";
 }
 
-export function ProposalsManagement({ filter }: ProposalsManagementProps) {
-  const [selectedProposal, setSelectedProposal] = useState<any>(null);
+type Proposal = {
+  _id: string;
+  status: string;
+  userId: string;
+  projectId: string;
+  nameProject: string;
+  userName: string;
+  userEmail: string;
+};
 
-  // Mock data - would be fetched from API in a real application
-  const proposals = [
-    {
-      id: "PROP001",
-      projectId: "PRJ001",
-      projectName: "Desarrollo de E-commerce",
-      userId: "USR123",
-      userName: "Carlos Rodríguez",
-      userEmail: "carlos@example.com",
-      status: "pending",
-      paymentProposal: "$3,200",
-      estimatedTime: "45 días",
-      yearsExperience: 5,
-      educationLevel: "Licenciatura en Informática",
-      languages: ["Español", "Inglés"],
-      certifications: [
-        "AWS Certified Developer",
-        "React Developer Certification",
-      ],
-      portfolioUrl: "https://portfolio.carlos.com",
-      githubUrl: "https://github.com/carlosdev",
-      linkedinUrl: "https://linkedin.com/in/carlosdev",
-    },
-    {
-      id: "PROP002",
-      projectId: "PRJ002",
-      projectName: "App Móvil de Delivery",
-      userId: "USR456",
-      userName: "Ana Martínez",
-      userEmail: "ana@example.com",
-      status: "accepted",
-      paymentProposal: "$4,800",
-      estimatedTime: "60 días",
-      yearsExperience: 7,
-      educationLevel: "Maestría en Desarrollo de Software",
-      languages: ["Español", "Inglés", "Francés"],
-      certifications: ["Google Mobile Developer", "iOS Developer"],
-      portfolioUrl: "https://portfolio.ana.com",
-      githubUrl: "https://github.com/anadev",
-      linkedinUrl: "https://linkedin.com/in/anadev",
-    },
-    {
-      id: "PROP003",
-      projectId: "PRJ003",
-      projectName: "Rediseño de Sitio Web",
-      userId: "USR789",
-      userName: "Miguel Sánchez",
-      userEmail: "miguel@example.com",
-      status: "rejected",
-      paymentProposal: "$2,000",
-      estimatedTime: "30 días",
-      yearsExperience: 3,
-      educationLevel: "Técnico en Diseño Web",
-      languages: ["Español"],
-      certifications: ["Adobe Certified Expert", "UI/UX Design Certificate"],
-      portfolioUrl: "https://portfolio.miguel.com",
-      githubUrl: "https://github.com/migueldesign",
-      linkedinUrl: "https://linkedin.com/in/migueldesign",
-    },
-    {
-      id: "PROP004",
-      projectId: "PRJ004",
-      projectName: "Sistema de Gestión Interna",
-      userId: "USR321",
-      userName: "Laura Gómez",
-      userEmail: "laura@example.com",
-      status: "pending",
-      paymentProposal: "$7,500",
-      estimatedTime: "90 días",
-      yearsExperience: 8,
-      educationLevel: "Doctorado en Ciencias de la Computación",
-      languages: ["Español", "Inglés", "Alemán"],
-      certifications: [
-        "Microsoft Certified Solutions Developer",
-        "Scrum Master",
-      ],
-      portfolioUrl: "https://portfolio.laura.com",
-      githubUrl: "https://github.com/lauradev",
-      linkedinUrl: "https://linkedin.com/in/lauradev",
-    },
-    {
-      id: "PROP005",
-      projectId: "PRJ005",
-      projectName: "Integración de API de Pagos",
-      userId: "USR654",
-      userName: "Javier López",
-      userEmail: "javier@example.com",
-      status: "pending",
-      paymentProposal: "$1,700",
-      estimatedTime: "20 días",
-      yearsExperience: 4,
-      educationLevel: "Licenciatura en Sistemas",
-      languages: ["Español", "Inglés", "Portugués"],
-      certifications: [
-        "Payment Card Industry Professional",
-        "API Security Specialist",
-      ],
-      portfolioUrl: "https://portfolio.javier.com",
-      githubUrl: "https://github.com/javierdev",
-      linkedinUrl: "https://linkedin.com/in/javierdev",
-    },
-  ];
+export function ProposalsManagement({ filter }: ProposalsManagementProps) {
+  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
+    null
+  );
+  const [proposals, setProposals] = useState<Proposal[]>([]);
+
+  useEffect(() => {
+    fetchProposals();
+
+    return () => {
+      setProposals([]);
+    };
+  }, []);
+
+  const fetchProposals = async () => {
+    const response = await fetch("http://localhost:3001/api/proposal", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setProposals(data);
+  };
 
   const filteredProposals =
     filter === "all"
@@ -139,11 +69,11 @@ export function ProposalsManagement({ filter }: ProposalsManagementProps) {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "pending":
+      case "pendiente":
         return <Badge className="bg-amber-500">Pendiente</Badge>;
-      case "accepted":
+      case "aceptado":
         return <Badge className="bg-green-500">Aceptada</Badge>;
-      case "rejected":
+      case "rechazado":
         return <Badge className="bg-red-500">Rechazada</Badge>;
       default:
         return <Badge>{status}</Badge>;
@@ -172,27 +102,53 @@ export function ProposalsManagement({ filter }: ProposalsManagementProps) {
             <TableHead>Freelancer</TableHead>
             <TableHead>Propuesta</TableHead>
             <TableHead>Estado</TableHead>
-            {/* <TableHead className="text-right">Acciones</TableHead> */}
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredProposals.map((proposal) => (
-            <TableRow key={proposal.id}>
-              <TableCell className="font-medium">{proposal.id}</TableCell>
+            <TableRow key={proposal._id}>
+              <TableCell className="font-medium">{proposal._id}</TableCell>
               <TableCell>
-                <div className="font-medium">{proposal.projectName}</div>
+                <div className="font-medium">{proposal.nameProject}</div>
                 <div className="text-sm text-muted-foreground">
                   ID: {proposal.projectId}
                 </div>
               </TableCell>
               <TableCell>{proposal.userName}</TableCell>
               <TableCell>
-                <div>{proposal.paymentProposal}</div>
+                <div>{proposal.userName}</div>
                 <div className="text-sm text-muted-foreground">
-                  {proposal.estimatedTime}
+                  {proposal.userEmail}
                 </div>
               </TableCell>
               <TableCell>{getStatusBadge(proposal.status)}</TableCell>
+              <TableCell>
+                <Dialog
+                  open={selectedProposal?._id === proposal._id}
+                  onOpenChange={(open) => {
+                    if (!open) setSelectedProposal(null);
+                  }}
+                >
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setSelectedProposal(proposal)}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </DialogTrigger>
+
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Detalles de la propuesta</DialogTitle>
+                      <DialogDescription>
+                        {proposal.nameProject} - {proposal.userName}
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
